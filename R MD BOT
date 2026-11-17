@@ -1,0 +1,394 @@
+<script>
+const CONFIG = {
+  brandName: "RAHMAN MD",
+  bannerImageUrl: "https://i.postimg.cc/T39pgVj6/27cae54b8fee86b54129e105e2d77584.jpg",
+  ownerNumber: "923290706749",
+  ownerName: "RAHMAN",
+  channelLink: "https://whatsapp.com/channel/0029VbE6RcF7tkjBXTTIA42G",
+  backendUrl: "https://web-production-4abfe.up.railway.app"
+};
+</script>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#080d18">
+  <meta name="description" content="Connect your WhatsApp device with a secure pairing code.">
+  <title>Pairing Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080d18;
+      --panel: rgba(17, 26, 43, .82);
+      --panel-2: #121d30;
+      --line: rgba(160, 183, 218, .13);
+      --muted: #8998b2;
+      --text: #f4f7ff;
+      --accent: #a5f36b;
+      --accent-2: #6bd9a5;
+      --danger: #ff777f;
+      --shadow: 0 24px 80px rgba(0,0,0,.38);
+    }
+    * { box-sizing: border-box; }
+    html { min-width: 320px; background: var(--bg); }
+    body {
+      margin: 0; min-height: 100vh; color: var(--text);
+      font-family: "DM Sans", sans-serif;
+      background:
+        radial-gradient(ellipse at 50% -12%, rgba(102, 210, 153, .16), transparent 43%),
+        radial-gradient(ellipse at 100% 48%, rgba(71, 121, 196, .11), transparent 35%),
+        var(--bg);
+      overflow-x: hidden;
+    }
+    body::before {
+      content: ""; position: fixed; inset: 0; pointer-events: none; opacity: .18;
+      background-image: linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 42px 42px; mask-image: linear-gradient(to bottom, black, transparent 80%);
+    }
+    .wrap { width: min(100% - 32px, 1060px); margin: 0 auto; padding: 28px 0 44px; position: relative; }
+    .topbar { display:flex; align-items:center; justify-content:space-between; gap:14px; margin-bottom:30px; }
+    .brand-mini { display:flex; align-items:center; gap:11px; min-width:0; }
+    .brand-mark { width:38px; height:38px; border-radius:13px; display:grid; place-items:center; background:linear-gradient(145deg,#b4ff7d,#56c99d); color:#0b1b17; font:700 17px "Space Grotesk"; box-shadow:0 7px 24px rgba(125,235,151,.22); flex:none; }
+    .brand-mini span { font:700 13px "Space Grotesk"; letter-spacing:.12em; color:#dce7f7; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .status { display:flex; align-items:center; gap:8px; padding:9px 12px; border:1px solid var(--line); background:rgba(17,26,43,.7); border-radius:30px; color:#b8c5d9; font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; white-space:nowrap; }
+    .dot { width:7px; height:7px; border-radius:50%; background:#e16d75; box-shadow:0 0 12px currentColor; }
+    .status.online .dot { background:#8be77d; color:#8be77d; }
+    .hero { text-align:center; max-width:720px; margin:0 auto 27px; }
+    .eyebrow { display:inline-flex; align-items:center; gap:8px; color:var(--accent); font-size:10px; font-weight:800; letter-spacing:.2em; text-transform:uppercase; margin-bottom:14px; }
+    .eyebrow::before,.eyebrow::after { content:""; width:22px; height:1px; background:rgba(165,243,107,.5); }
+    h1 { font:700 clamp(29px, 7vw, 48px)/1.08 "Space Grotesk",sans-serif; letter-spacing:-.045em; margin:0; overflow-wrap:anywhere; }
+    .subtitle { margin:13px auto 0; color:var(--muted); font-size:14px; line-height:1.7; max-width:480px; }
+    .banner-shell { width:104px; height:104px; padding:4px; border-radius:28px; margin:0 auto 19px; background:linear-gradient(145deg,#b6ff80,#4fbd9c 55%,#456c9e); box-shadow:0 12px 36px rgba(96,220,155,.2); }
+    .banner { display:block; width:100%; height:100%; border-radius:24px; object-fit:cover; background:#172438; }
+    .owner-line { margin-top:15px; color:#8d9db7; font-size:12px; }
+    .owner-line strong { color:#dce8f7; font-weight:700; }
+    .channel-link { display:inline-flex; align-items:center; gap:8px; margin-top:17px; padding:10px 15px; border:1px solid rgba(165,243,107,.22); border-radius:30px; color:#c9f7a8; background:rgba(165,243,107,.06); text-decoration:none; font-size:12px; font-weight:700; transition:.2s; }
+    .channel-link:hover { background:rgba(165,243,107,.13); transform:translateY(-1px); }
+    .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:31px 0 22px; }
+    .stat { min-width:0; padding:17px 16px; border:1px solid var(--line); border-radius:17px; background:rgba(17,26,43,.67); box-shadow:0 8px 30px rgba(0,0,0,.1); }
+    .stat-label { color:var(--muted); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.09em; line-height:1.4; }
+    .stat-value { margin-top:8px; font:700 clamp(21px,4vw,27px) "Space Grotesk"; letter-spacing:-.04em; }
+    .stat-foot { color:#6f819d; font-size:10px; margin-top:3px; }
+    .main-grid { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(260px,.8fr); gap:16px; align-items:stretch; }
+    .card { border:1px solid var(--line); border-radius:23px; background:var(--panel); box-shadow:var(--shadow); backdrop-filter:blur(18px); }
+    .pair-card { padding:26px; }
+    .card-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:7px; }
+    h2 { margin:0; font:700 21px "Space Grotesk"; letter-spacing:-.03em; }
+    .step-pill { color:var(--accent); border:1px solid rgba(165,243,107,.2); background:rgba(165,243,107,.07); border-radius:20px; padding:6px 9px; font-size:10px; font-weight:800; letter-spacing:.08em; white-space:nowrap; }
+    .card-copy { margin:0 0 23px; color:var(--muted); font-size:12px; line-height:1.6; }
+    label { display:block; color:#c5d0e2; font-size:11px; font-weight:700; margin:0 0 9px; }
+    .phone-row { display:grid; grid-template-columns:104px minmax(0,1fr); gap:10px; }
+    .field { width:100%; min-width:0; height:53px; border:1px solid rgba(160,183,218,.17); border-radius:13px; background:#0b1423; color:#f4f7ff; padding:0 14px; outline:none; font:600 15px "DM Sans"; transition:border .2s,box-shadow .2s; }
+    .field:focus { border-color:rgba(165,243,107,.7); box-shadow:0 0 0 3px rgba(165,243,107,.09); }
+    .field::placeholder { color:#566781; }
+    .country-wrap { position:relative; }
+    .country-wrap::before { content:"+"; position:absolute; left:14px; top:16px; color:#91a1ba; font-size:15px; pointer-events:none; }
+    .country { padding-left:28px; }
+    .input-note { color:#71829e; font-size:10px; margin:9px 0 18px; line-height:1.5; }
+    .primary-btn { width:100%; min-height:54px; border:0; border-radius:14px; background:linear-gradient(105deg,#b9f879,#70dba3); color:#102018; font:800 13px "DM Sans"; letter-spacing:.02em; cursor:pointer; box-shadow:0 9px 26px rgba(132,226,130,.17); transition:transform .2s,filter .2s; }
+    .primary-btn:hover:not(:disabled) { transform:translateY(-2px); filter:brightness(1.05); }
+    .primary-btn:disabled { cursor:wait; opacity:.65; }
+    .result { display:none; margin-top:19px; padding:17px; border:1px solid rgba(165,243,107,.24); border-radius:16px; background:rgba(165,243,107,.055); text-align:center; }
+    .result.show { display:block; animation:rise .3s ease both; }
+    @keyframes rise { from{opacity:0;transform:translateY(7px)} to{opacity:1;transform:translateY(0)} }
+    .result-label { color:#a9bcaa; font-size:10px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; }
+    .code { margin:10px 0 12px; font:700 clamp(29px,8vw,39px) "Space Grotesk"; letter-spacing:.12em; color:#d7ffb7; user-select:all; }
+    .result-bottom { display:flex; justify-content:center; align-items:center; gap:12px; flex-wrap:wrap; }
+    .timer { color:#a2b39f; font-size:11px; }
+    .copy-btn { border:1px solid rgba(165,243,107,.28); border-radius:9px; padding:8px 12px; background:rgba(165,243,107,.1); color:#d8ffbd; font:700 11px "DM Sans"; cursor:pointer; }
+    .how-card { padding:25px 23px; display:flex; flex-direction:column; }
+    .how-card h2 { margin-bottom:18px; }
+    .instruction { display:flex; gap:12px; margin-bottom:17px; }
+    .instruction-num { width:27px; height:27px; border-radius:9px; display:grid; place-items:center; flex:none; background:rgba(165,243,107,.1); color:var(--accent); font:700 12px "Space Grotesk"; }
+    .instruction strong { display:block; color:#e0e8f5; font-size:12px; margin:1px 0 4px; }
+    .instruction p { margin:0; color:var(--muted); font-size:11px; line-height:1.55; }
+    .tip { margin-top:auto; padding:13px; border-radius:13px; background:rgba(91,135,181,.08); border:1px solid rgba(130,165,207,.1); color:#91a5c1; font-size:10px; line-height:1.6; }
+    .tip strong { color:#c8d6e9; }
+    .footer { display:flex; justify-content:space-between; gap:12px; margin-top:24px; padding:0 3px; color:#5f708b; font-size:10px; }
+    .toast { position:fixed; z-index:10; left:50%; bottom:24px; transform:translate(-50%,20px); width:min(calc(100% - 32px),420px); padding:13px 16px; border:1px solid var(--line); border-radius:13px; background:#17243a; color:#eaf0fa; box-shadow:0 15px 40px rgba(0,0,0,.4); font-size:12px; line-height:1.5; opacity:0; pointer-events:none; transition:.25s; text-align:center; }
+    .toast.show { opacity:1; transform:translate(-50%,0); }
+    .toast.error { border-color:rgba(255,119,127,.35); }
+    @media (max-width:700px) {
+      .wrap { width:min(100% - 28px,520px); padding-top:19px; }
+      .topbar { margin-bottom:25px; }
+      .stats { grid-template-columns:repeat(2,1fr); gap:9px; margin:25px 0 15px; }
+      .stat { padding:14px; border-radius:15px; }
+      .main-grid { grid-template-columns:1fr; gap:13px; }
+      .pair-card { padding:21px 18px; }
+      .how-card { padding:21px 19px; }
+      .hero { margin-bottom:21px; }
+      .banner-shell { width:88px; height:88px; border-radius:24px; margin-bottom:16px; }
+      .banner { border-radius:20px; }
+      .subtitle { font-size:12px; }
+      .footer { flex-direction:column; align-items:center; text-align:center; margin-top:20px; }
+    }
+    @media (max-width:360px) {
+      .wrap { width:calc(100% - 22px); }
+      .brand-mini span { font-size:11px; }
+      .status { padding:8px 9px; font-size:9px; }
+      .phone-row { grid-template-columns:91px minmax(0,1fr); gap:8px; }
+      .field { padding-right:10px; padding-left:10px; }
+      .country { padding-left:25px; }
+      .country-wrap::before { left:11px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="topbar">
+      <div class="brand-mini">
+        <div class="brand-mark" aria-hidden="true">R</div>
+        <span id="miniBrand"></span>
+      </div>
+      <div class="status" id="serverStatus"><span class="dot"></span><span id="statusText">Checking server</span></div>
+    </header>
+
+    <section class="hero">
+      <div class="banner-shell"><img class="banner" id="brandBanner" alt="Brand logo"></div>
+      <div class="eyebrow">WhatsApp connection portal</div>
+      <h1 id="brandTitle"></h1>
+      <p class="subtitle">Connect your WhatsApp account in seconds. Generate your secure pairing code and link your device.</p>
+      <div class="owner-line">Managed by <strong id="ownerName"></strong></div>
+      <a class="channel-link" id="channelLink" target="_blank" rel="noopener noreferrer">
+        <span aria-hidden="true">◉</span> Join WhatsApp Channel <span aria-hidden="true">↗</span>
+      </a>
+    </section>
+
+    <section class="stats" aria-label="Live server statistics">
+      <div class="stat"><div class="stat-label">Total users</div><div class="stat-value" id="totalUsers">—</div><div class="stat-foot">Across the server</div></div>
+      <div class="stat"><div class="stat-label">Connected sessions</div><div class="stat-value" id="activeSessions">—</div><div class="stat-foot">Currently connected</div></div>
+      <div class="stat"><div class="stat-label">New today</div><div class="stat-value" id="dailyNew">—</div><div class="stat-foot">Daily activity</div></div>
+      <div class="stat"><div class="stat-label">Total paired</div><div class="stat-value" id="totalPaired">—</div><div class="stat-foot">Successful pairings</div></div>
+    </section>
+
+    <section class="main-grid">
+      <div class="card pair-card">
+        <div class="card-heading">
+          <h2>Pair your device</h2>
+          <span class="step-pill">01 / CONNECT</span>
+        </div>
+        <p class="card-copy">Enter your WhatsApp number with its country code to receive a pairing code.</p>
+        <form id="pairForm" novalidate>
+          <label for="countryCode">Phone number</label>
+          <div class="phone-row">
+            <div class="country-wrap"><input class="field country" id="countryCode" type="tel" inputmode="numeric" value="92" aria-label="Country calling code" autocomplete="tel-country-code"></div>
+            <input class="field" id="phoneNumber" type="tel" inputmode="numeric" placeholder="Your phone number" autocomplete="tel-national" aria-label="Phone number" required>
+          </div>
+          <p class="input-note">Include your country calling code. Do not enter a leading plus sign in the number field.</p>
+          <button class="primary-btn" id="pairButton" type="submit">Get Pairing Code <span aria-hidden="true">→</span></button>
+        </form>
+        <div class="result" id="pairResult" aria-live="polite">
+          <div class="result-label">Your pairing code</div>
+          <div class="code" id="pairCode">••••-••••</div>
+          <div class="result-bottom">
+            <span class="timer" id="countdown">Expires in 02:00</span>
+            <button class="copy-btn" id="copyButton" type="button">Copy code</button>
+          </div>
+        </div>
+      </div>
+
+      <aside class="card how-card">
+        <h2>How to connect</h2>
+        <div class="instruction"><div class="instruction-num">1</div><div><strong>Enter your number</strong><p>Choose your country code and type the WhatsApp number you want to connect.</p></div></div>
+        <div class="instruction"><div class="instruction-num">2</div><div><strong>Generate your code</strong><p>Tap the button and wait a moment while your pairing code is created.</p></div></div>
+        <div class="instruction"><div class="instruction-num">3</div><div><strong>Link on WhatsApp</strong><p>Open WhatsApp → Linked devices → Link a device → Link with phone number instead.</p></div></div>
+        <div class="tip"><strong>Keep this page open.</strong> Enter the displayed code on your phone before the countdown reaches zero.</div>
+      </aside>
+    </section>
+
+    <footer class="footer">
+      <span id="footerBrand"></span>
+      <span>Secure device pairing · Live server status</span>
+    </footer>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const api = CONFIG.backendUrl.replace(/\/+$/, "");
+    let toastTimeout;
+    let countdownInterval;
+    let remainingSeconds = 0;
+    let currentCode = "";
+
+    function applyBrand() {
+      document.title = CONFIG.brandName + " | Pairing Dashboard";
+      $("miniBrand").textContent = CONFIG.brandName;
+      $("brandTitle").textContent = CONFIG.brandName;
+      $("brandBanner").src = CONFIG.bannerImageUrl;
+      $("ownerName").textContent = CONFIG.ownerName;
+      $("channelLink").href = CONFIG.channelLink;
+      $("footerBrand").textContent = "© " + new Date().getFullYear() + " " + CONFIG.brandName;
+      $("brandBanner").addEventListener("error", () => {
+        $("brandBanner").style.visibility = "hidden";
+      }, { once: true });
+    }
+
+    function showToast(message, isError = false) {
+      const toast = $("toast");
+      toast.textContent = message;
+      toast.classList.toggle("error", isError);
+      toast.classList.add("show");
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => toast.classList.remove("show"), 3800);
+    }
+
+    async function apiFetch(path, options = {}) {
+      return fetch(api + path, {
+        ...options,
+        headers: { "Content-Type": "application/json", ...(options.headers || {}) }
+      });
+    }
+
+    async function checkHealth() {
+      try {
+        const response = await apiFetch("/api/health");
+        if (!response.ok) throw new Error("Server unavailable");
+        const data = await response.json();
+        if (data.status !== "ok") throw new Error("Server unavailable");
+        $("serverStatus").classList.add("online");
+        $("statusText").textContent = "Server online";
+      } catch (_) {
+        $("serverStatus").classList.remove("online");
+        $("statusText").textContent = "Server offline";
+      }
+    }
+
+    async function loadStats() {
+      try {
+        const response = await apiFetch("/api/stats");
+        if (!response.ok) return;
+        const data = await response.json();
+        if (!data.ok) return;
+        $("totalUsers").textContent = Number(data.totalUsers ?? 0).toLocaleString();
+        $("activeSessions").textContent = Number(data.activeSessions ?? 0).toLocaleString();
+        $("dailyNew").textContent = Number(data.dailyNew ?? 0).toLocaleString();
+        $("totalPaired").textContent = Number(data.totalPaired ?? 0).toLocaleString();
+      } catch (_) {
+        // Keep the last successfully displayed values.
+      }
+    }
+
+    function formatCode(code) {
+      const clean = String(code || "").replace(/[^a-z0-9]/gi, "").toUpperCase();
+      return clean.length === 8 ? clean.slice(0, 4) + "-" + clean.slice(4) : clean;
+    }
+
+    function renderCountdown() {
+      const mins = Math.floor(remainingSeconds / 60).toString().padStart(2, "0");
+      const secs = (remainingSeconds % 60).toString().padStart(2, "0");
+      $("countdown").textContent = remainingSeconds > 0 ? `Expires in ${mins}:${secs}` : "Code expired";
+      if (remainingSeconds <= 0) {
+        clearInterval(countdownInterval);
+        $("pairCode").textContent = currentCode ? formatCode(currentCode) : "—";
+        $("copyButton").disabled = true;
+      }
+    }
+
+    function startCountdown(seconds) {
+      clearInterval(countdownInterval);
+      remainingSeconds = Math.max(0, Math.floor(Number(seconds) || 0));
+      $("copyButton").disabled = remainingSeconds <= 0;
+      $("pairResult").classList.add("show");
+      renderCountdown();
+      countdownInterval = setInterval(() => {
+        remainingSeconds = Math.max(0, remainingSeconds - 1);
+        renderCountdown();
+      }, 1000);
+    }
+
+    function setLoading(loading) {
+      const button = $("pairButton");
+      button.disabled = loading;
+      button.textContent = loading ? "Generating..." : "Get Pairing Code →";
+    }
+
+    $("pairForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const country = $("countryCode").value.replace(/\D/g, "");
+      const local = $("phoneNumber").value.replace(/\D/g, "");
+      const number = (country + local).replace(/\D/g, "");
+
+      if (!country || !local || number.length < 10 || number.length > 15) {
+        showToast("Enter a valid phone number between 10 and 15 digits, including the country code.", true);
+        return;
+      }
+
+      setLoading(true);
+      $("pairResult").classList.remove("show");
+      try {
+        const response = await apiFetch("/api/pair", {
+          method: "POST",
+          body: JSON.stringify({
+            number,
+            brand: {
+              name: CONFIG.brandName,
+              banner: CONFIG.bannerImageUrl,
+              owner: CONFIG.ownerNumber,
+              ownerName: CONFIG.ownerName,
+              channel: CONFIG.channelLink
+            }
+          })
+        });
+
+        let data = {};
+        try { data = await response.json(); } catch (_) {}
+        if (!response.ok) {
+          const messages = {
+            400: data.error || "Invalid phone number. Check the number and try again.",
+            429: data.error || "A pairing is already in progress. Please wait a moment.",
+            503: data.error || "Pairing capacity is full. Please try again later.",
+            500: data.error || "Could not generate a pairing code. Please try again."
+          };
+          throw new Error(messages[response.status] || data.error || "Could not generate a pairing code.");
+        }
+        if (!data.code) throw new Error(data.error || "The server did not return a pairing code.");
+
+        currentCode = String(data.code);
+        $("pairCode").textContent = formatCode(currentCode);
+        startCountdown(data.expiresIn ?? 120);
+        showToast("Pairing code generated. Enter it in WhatsApp Linked devices.");
+      } catch (error) {
+        const message = error instanceof TypeError
+          ? "Could not reach server, please try again."
+          : (error.message || "Could not reach server, please try again.");
+        showToast(message, true);
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    $("copyButton").addEventListener("click", async () => {
+      if (!currentCode || remainingSeconds <= 0) return;
+      try {
+        await navigator.clipboard.writeText(currentCode);
+        showToast("Pairing code copied.");
+      } catch (_) {
+        const textArea = document.createElement("textarea");
+        textArea.value = currentCode;
+        textArea.style.position = "fixed";
+        textArea.style.opacity = "0";
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+          document.execCommand("copy");
+          showToast("Pairing code copied.");
+        } catch (_) {
+          showToast("Could not copy automatically. Select the code to copy it.", true);
+        }
+        textArea.remove();
+      }
+    });
+
+    applyBrand();
+    checkHealth();
+    loadStats();
+    setInterval(loadStats, 30000);
+    setInterval(checkHealth, 30000);
+  </script>
+</body>
+</html>
